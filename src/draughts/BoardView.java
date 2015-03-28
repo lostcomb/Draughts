@@ -2,7 +2,6 @@ package draughts;
 
 import javax.swing.*;
 import javax.imageio.*;
-import java.io.*;
 import java.awt.*;
 import java.awt.image.*;
 import java.awt.event.*;
@@ -35,11 +34,11 @@ public class BoardView extends JPanel implements MouseListener {
         try {
             setPreferredSize(new Dimension(boardWidth + (2 * border), boardHeight + (2 * border)));
             pieces = new HashSet<Piece>();
-            king = ImageIO.read(new File("king.png"));
+            king = ImageIO.read(this.getClass().getResource("/king.png"));
             label = new JLabel("");
             add(label);
             addMouseListener(this);
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("Error reading king file.");
             System.exit(1);
         }
