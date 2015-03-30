@@ -1,8 +1,8 @@
 # README #
 
-A simple version of English Draughts.
+A simple version of English draughts. This game allows for saving and loading games, the save is done either when a game is over or when the application is closed. The standard rule set is used. 
 
-This game doesn't currently allow for the full rules, only one move per player is possible. The full rules shouldn't be too hard to implement though.
+See here for rules: [http://en.wikipedia.org/wiki/English_draughts](http://en.wikipedia.org/wiki/English_draughts)
 
 ## The game running: ##
 
