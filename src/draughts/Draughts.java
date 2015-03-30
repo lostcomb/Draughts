@@ -30,6 +30,7 @@ public class Draughts implements Player, ActionListener, WindowListener {
      */
     public static void main(String[] args) {
         try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             Draughts draughts = new Draughts();
             SwingUtilities.invokeAndWait(draughts::run);
             draughts.initialiseGame();
