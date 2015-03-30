@@ -1,0 +1,11 @@
+White
+[Red, 4, 7, false]
+[Red, 4, 3, false]
+[Red, 7, 6, false]
+[Red, 5, 6, false]
+[Red, 6, 7, false]
+[Red, 5, 0, true]
+[Red, 4, 1, true]
+[Red, 2, 7, false]
+[Red, 0, 7, false]
+[Red, 3, 6, true]

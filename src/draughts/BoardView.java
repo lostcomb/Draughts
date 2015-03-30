@@ -17,10 +17,10 @@ public class BoardView extends JPanel implements MouseListener {
     private static final int minY = 0;
     private static final int maxX = 7;
     private static final int minX = 0;
-    private int border = 35;
+    private int wBorder = 35;
+    private int hBorder = 35;
     private int squareSize = 50;
-    private int boardWidth = 8 * squareSize;
-    private int boardHeight = 8 * squareSize;
+    private int boardSize = 8 * squareSize;
     private BufferedImage king;
     private JLabel label;
     private Set<Piece> pieces;
@@ -32,7 +32,7 @@ public class BoardView extends JPanel implements MouseListener {
      */
     public BoardView() {
         try {
-            setPreferredSize(new Dimension(boardWidth + (2 * border), boardHeight + (2 * border)));
+            setPreferredSize(new Dimension(boardSize + (2 * wBorder), boardSize + (2 * hBorder)));
             pieces = new HashSet<Piece>();
             king = ImageIO.read(this.getClass().getResource("/king.png"));
             label = new JLabel("");
@@ -55,13 +55,14 @@ public class BoardView extends JPanel implements MouseListener {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                             RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(Color.white);
-        g.fillRect(0, 0, boardWidth + (2 * border), boardHeight + (2 * border));
+        g.fillRect(0, 0, boardSize + (2 * wBorder), boardSize + (2 * hBorder));
         g.setColor(Color.green.darker().darker());
-        int inner = border - 2;
-        g.fillRect(inner, inner, (boardWidth + 4), (boardHeight + 4));
+        int wInner = wBorder - 2;
+        int hInner = hBorder - 2;
+        g.fillRect(wInner, hInner, (boardSize + 4), (boardSize + 4));
         boolean white = true;
-        for (int i = 0, j = border; i <= maxX; i++, j += squareSize) {
-            for (int k = 0, l = border; k <= maxY; k++, l += squareSize) {
+        for (int i = 0, j = wBorder; i <= maxX; i++, j += squareSize) {
+            for (int k = 0, l = hBorder; k <= maxY; k++, l += squareSize) {
                 if (white) g.setColor(Color.white);
                 else g.setColor(Color.green.darker().darker());
                 g.fillRect(j, l, squareSize, squareSize);
@@ -85,7 +86,7 @@ public class BoardView extends JPanel implements MouseListener {
         if (piece != null) {
             g.setColor(getColor(piece.getColour(), x, y));
             g.fillOval(dX + 5, dY + 5, squareSize - 10, squareSize - 10);
-            if (piece.isKing()) g.drawImage(king, dX, dY, null);
+            if (piece.isKing()) g.drawImage(king, dX, dY, squareSize, squareSize, null);
         }
     }
     

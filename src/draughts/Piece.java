@@ -99,4 +99,27 @@ public class Piece {
         return "[" + colour.toString() + ", " + x + ", " + y + ", " + king + "]";
     }
     
+    /**
+     * Returns the Piece represented by a String.
+     *
+     * @param pieceString the String representing the Piece.
+     * @return the Piece represented by a String.
+     * @throws NullPointerException if the input is null.
+     * @throws IllegalArgumentException if the input doesn't
+     * represent a Piece object.
+     */
+    public static Piece valueOf(String pieceString) {
+        if (pieceString == null) throw new NullPointerException();
+        pieceString = pieceString.substring(1, pieceString.length() - 1);
+        String[] items = pieceString.split(", ");
+        if (items.length != 4) throw new IllegalArgumentException();
+        Colour colour = Colour.valueOf(items[0]);
+        int x = Integer.parseInt(items[1]);
+        int y = Integer.parseInt(items[2]);
+        boolean king = Boolean.parseBoolean(items[3]);
+        Piece piece = new Piece(colour, x, y);
+        piece.setKing(king);
+        return piece;
+    }
+    
 }
