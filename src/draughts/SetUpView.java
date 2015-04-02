@@ -11,6 +11,8 @@ import java.awt.event.*;
 
 public class SetUpView extends JPanel {
   
+    private static final long serialVersionUID = -3633674241692834588L;
+  
     /**
      * Constructs a new SetUpView.
      *

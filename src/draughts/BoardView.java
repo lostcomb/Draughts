@@ -13,19 +13,24 @@ import java.util.*;
 
 public class BoardView extends JPanel implements MouseListener {
     
+    private static final long serialVersionUID = -4369812185188908867L;
+    
     private static final int maxY = 7;
     private static final int minY = 0;
     private static final int maxX = 7;
     private static final int minX = 0;
-    private int wBorder = 35;
-    private int hBorder = 35;
-    private int squareSize = 50;
-    private int boardSize = 8 * squareSize;
+    private static final int wBorder = 35;
+    private static final int hBorder = 35;
+    private static final int squareSize = 50;
+    private static int boardSize = 8 * squareSize;
     private BufferedImage king;
     private JLabel label;
     private Set<Piece> pieces;
     private ActionListener listener;
     private Point selected = new Point(-1, -1);
+    private Piece animatedPiece;
+    private int x, y, startX, startY;
+    private Point start, destination;
     
     /**
      * Constructs a new BoardView object.
@@ -36,6 +41,8 @@ public class BoardView extends JPanel implements MouseListener {
             pieces = new HashSet<Piece>();
             king = ImageIO.read(this.getClass().getResource("/king.png"));
             label = new JLabel("");
+            label.setForeground(new Color(49, 49, 51));
+            label.setFont(new Font("Helvetica Neue", Font.BOLD, 14));
             add(label);
             addMouseListener(this);
         } catch (Exception e) {
@@ -67,24 +74,25 @@ public class BoardView extends JPanel implements MouseListener {
                 else g.setColor(Color.green.darker().darker());
                 g.fillRect(j, l, squareSize, squareSize);
                 white = !white;
-                drawPiece(i, k, j, l, g);
+                drawPiece(getPiece(i, k), j, l, g);
             }
             white = !white;
         }
+        drawPiece(animatedPiece, x, y, g);
     }
     
     // Draws a Piece.
-    // @param x the x coordinate of the Piece to be drawn.
-    // @param y the y coordinate of the Piece to be drawn.
+    // @param piece the Piece to be drawn.
     // @param dX the x coordinate of the upper left corner of
     // the square that will contain the Piece.
     // @param dY the y coordinate of the upper left corner of
     // the square that will contain the Piece.
     // @param g the Graphics2D object to be drawn to.
-    private void drawPiece(int x, int y, int dX, int dY, Graphics2D g) {
-        Piece piece = getPiece(x, y);
+    private void drawPiece(Piece piece, int dX, int dY, Graphics2D g) {
         if (piece != null) {
-            g.setColor(getColor(piece.getColour(), x, y));
+            g.setColor(new Color(49, 49, 51));
+            g.fillOval(dX + 6, dY + 6, squareSize - 9, squareSize - 9);
+            g.setColor(getColor(piece.getColour(), piece.getX(), piece.getY()));
             g.fillOval(dX + 5, dY + 5, squareSize - 10, squareSize - 10);
             if (piece.isKing()) g.drawImage(king, dX, dY, squareSize, squareSize, null);
         }
@@ -132,6 +140,93 @@ public class BoardView extends JPanel implements MouseListener {
     public void update(Set<Piece> pieces) {
         this.pieces = pieces;
         repaint();
+    }
+    
+    /**
+     * Sets up the information required to animate a Piece.
+     *
+     * @param move the Move to be animated.
+     */
+    public void setupAnimation(Move move) {
+        animatedPiece = move.piece;
+        startX = wBorder + (move.piece.getX() * squareSize);
+        startY = hBorder + (move.piece.getY() * squareSize);
+        x = startX;
+        y = startY;
+        pieces.remove(move.piece);
+        start = new Point(move.piece.getX(), move.piece.getY());
+        destination = move.destination;
+    }
+    
+    /**
+     * Updates the information required to animate a Piece.
+     *
+     * @param t the fraction of where the animation is in
+     * relation to the start of the animation.
+     */
+    public void updateAnimation(double t) {
+        Point point = calcBezier(t);
+        x = startX + (int) point.getX();
+        y = startY + (int) point.getY();
+        repaint();
+    }
+    
+    // Returns the Point containing the offset to the start coordinates.
+    // @param t the fraction of where the Point is in relation
+    // to the start and end points.
+    // @return the Point containing the offset to the start coordinates.
+    private Point calcBezier(double t) {
+        int xDiff = (int) destination.getX() - (int) start.getX();
+        int yDiff = (int) destination.getY() - (int) start.getY();
+        if (xDiff % 2 == 0) {
+            if (xDiff < 0 && yDiff < 0) {
+                return cubicBezier(new Point(0, 0), new Point(-25, -50), new Point(-50, -75), new Point(-100, -100), t);
+            } else if (xDiff > 0 && yDiff < 0) {
+                return cubicBezier(new Point(0, 0), new Point(25, -50), new Point(50, -75), new Point(100, -100), t);
+            } else if (xDiff > 0 && yDiff > 0) {
+                return cubicBezier(new Point(0, 0), new Point(50, 25), new Point(75, 50), new Point(100, 100), t);
+            } else if (xDiff < 0 && yDiff > 0) {
+                return cubicBezier(new Point(0, 0), new Point(-50, 25), new Point(-75, 50), new Point(-100, 100), t);
+            }
+        } else {
+            if (xDiff < 0 && yDiff < 0) {
+                return cubicBezier(new Point(0, 0), new Point(0, 0), new Point(-50, -50), new Point(-50, -50), t);
+            } else if (xDiff > 0 && yDiff < 0) {
+                return cubicBezier(new Point(0, 0), new Point(0, 0), new Point(50, -50), new Point(50, -50), t);
+            } else if (xDiff > 0 && yDiff > 0) {
+                return cubicBezier(new Point(0, 0), new Point(0, 0), new Point(50, 50), new Point(50, 50), t);
+            } else if (xDiff < 0 && yDiff > 0) {
+                return cubicBezier(new Point(0, 0), new Point(0, 0), new Point(-50, 50), new Point(-50, 50), t);
+            }
+        }
+        return null;
+    } 
+    
+    // Returns a Point containing the coordinates of the line 
+    // for a certain Bezier curve.
+    // @param p0 the P0 Point defining the curve.
+    // @param p1 the P1 Point defining the curve.
+    // @param p2 the P2 Point defining the curve.
+    // @param p3 the P3 Point defining the curve.
+    // @param t the fraction of where the Point is in relation
+    // to the start and end points.
+    // @return a Point containing the coordinates of the line
+    // for a certain Bezier curve.
+    private Point cubicBezier(Point p0, Point p1, Point p2, Point p3, double t) {
+        double ti = (1 - t);
+        double x = (ti * ti * ti * p0.getX()) + (3 * ti * ti * t * p1.getX())
+                    + (3 * ti * t * t * p2.getX()) + (t * t * t * p3.getX());
+        double y = (ti * ti * ti * p0.getY()) + (3 * ti * ti * t * p1.getY())
+                    + (3 * ti * t * t * p2.getY()) + (t * t * t * p3.getY());
+        return new Point((int) x, (int) y);
+    }
+    
+    /**
+     * Resets the information required to animate a Piece.
+     */
+    public void resetAnimation() {
+        pieces.add(animatedPiece);
+        animatedPiece = null;
     }
     
     /**

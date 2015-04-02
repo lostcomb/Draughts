@@ -35,7 +35,7 @@ public class Draughts implements Player, ActionListener, WindowListener {
             SwingUtilities.invokeAndWait(draughts::run);
             draughts.initialiseGame();
         } catch (Exception e) {
-            System.err.println("Error starting game.");
+            System.err.println("Error starting game." + e);
             System.exit(1);
         }
     }
@@ -212,8 +212,24 @@ public class Draughts implements Player, ActionListener, WindowListener {
             }
         }
         pda.reset();
+        animatePiece(move);
         board.select(-1, -1);
         return move;
+    }
+    
+    // Animates a specified Move.
+    // @param move the Move to be animated.
+    private void animatePiece(Move move) {
+        board.setupAnimation(move);
+        for (int i = 0; i < 50; i++) {
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+                System.err.println("Interrupted from sleeping whilst animating a Piece.");
+            }
+            board.updateAnimation((double) i / 50.0);
+        }
+        board.resetAnimation();
     }
     
     // Returns true if the Set contains the Move.
