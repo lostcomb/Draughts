@@ -1,2 +1,7 @@
-White
-[Red, 5, 4, false]
+Red
+[Red, 4, 5, false]
+[Red, 4, 3, true]
+[Red, 4, 7, false]
+[Red, 0, 7, false]
+[Red, 2, 7, false]
+[White, 1, 6, false]

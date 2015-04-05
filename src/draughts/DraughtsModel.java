@@ -250,8 +250,8 @@ class DraughtsModel {
     // Returns true if the game is over.
     // @return true if the game is over.
     private boolean isGameOver() {
-        if (validMoves(Colour.Red).size() == 0 
-            || validMoves(Colour.White).size() == 0) return true;
+        if (validMoves(Colour.Red).size() == 0 && currentPlayer.equals(Colour.Red)
+            || validMoves(Colour.White).size() == 0 && currentPlayer.equals(Colour.White)) return true;
         return false;
     }
     
