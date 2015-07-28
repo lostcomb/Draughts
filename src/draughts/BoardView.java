@@ -12,9 +12,9 @@ import java.util.*;
  */
 
 public class BoardView extends JPanel implements MouseListener {
-    
+
     private static final long serialVersionUID = -4369812185188908867L;
-    
+
     private static final int maxY = 7;
     private static final int minY = 0;
     private static final int maxX = 7;
@@ -31,7 +31,7 @@ public class BoardView extends JPanel implements MouseListener {
     private Piece animatedPiece;
     private int x, y, startX, startY;
     private Point start, destination;
-    
+
     /**
      * Constructs a new BoardView object.
      */
@@ -50,7 +50,7 @@ public class BoardView extends JPanel implements MouseListener {
             System.exit(1);
         }
     }
-    
+
     /**
      * Draws the board and pieces.
      *
@@ -80,7 +80,7 @@ public class BoardView extends JPanel implements MouseListener {
         }
         drawPiece(animatedPiece, x, y, g);
     }
-    
+
     // Draws a Piece.
     // @param piece the Piece to be drawn.
     // @param dX the x coordinate of the upper left corner of
@@ -97,7 +97,7 @@ public class BoardView extends JPanel implements MouseListener {
             if (piece.isKing()) g.drawImage(king, dX, dY, squareSize, squareSize, null);
         }
     }
-    
+
     // Returns the correct Color for the Piece.
     // @param player the Colour of the current player.
     // @param x the x coordinate of the Piece.
@@ -109,7 +109,7 @@ public class BoardView extends JPanel implements MouseListener {
         if (player.equals(Colour.Red)) return new Color(204, 0, 0, alpha);
         else return new Color(255, 250, 250, alpha);
     }
-    
+
     // Returns the Piece with the specified coordinates.
     // @param x the x coordinate of the Piece.
     // @param y the y coordinate of the Piece.
@@ -120,7 +120,7 @@ public class BoardView extends JPanel implements MouseListener {
         }
         return null;
     }
-    
+
     /**
      * Sets the alpha of the selected Piece.
      *
@@ -131,7 +131,7 @@ public class BoardView extends JPanel implements MouseListener {
         selected = new Point(x, y);
         repaint();
     }
-    
+
     /**
      * Updates the Set of Pieces.
      *
@@ -141,7 +141,7 @@ public class BoardView extends JPanel implements MouseListener {
         this.pieces = pieces;
         repaint();
     }
-    
+
     /**
      * Sets up the information required to animate a Piece.
      *
@@ -157,7 +157,7 @@ public class BoardView extends JPanel implements MouseListener {
         start = new Point(move.piece.getX(), move.piece.getY());
         destination = move.destination;
     }
-    
+
     /**
      * Updates the information required to animate a Piece.
      *
@@ -170,7 +170,7 @@ public class BoardView extends JPanel implements MouseListener {
         y = startY + (int) point.getY();
         repaint();
     }
-    
+
     // Returns the Point containing the offset to the start coordinates.
     // @param t the fraction of where the Point is in relation
     // to the start and end points.
@@ -200,9 +200,9 @@ public class BoardView extends JPanel implements MouseListener {
             }
         }
         return null;
-    } 
-    
-    // Returns a Point containing the coordinates of the line 
+    }
+
+    // Returns a Point containing the coordinates of the line
     // for a certain Bezier curve.
     // @param p0 the P0 Point defining the curve.
     // @param p1 the P1 Point defining the curve.
@@ -220,7 +220,7 @@ public class BoardView extends JPanel implements MouseListener {
                     + (3 * ti * t * t * p2.getY()) + (t * t * t * p3.getY());
         return new Point((int) x, (int) y);
     }
-    
+
     /**
      * Resets the information required to animate a Piece.
      */
@@ -228,7 +228,7 @@ public class BoardView extends JPanel implements MouseListener {
         pieces.add(animatedPiece);
         animatedPiece = null;
     }
-    
+
     /**
      * Sets the text of the JLabel in the view.
      *
@@ -237,23 +237,23 @@ public class BoardView extends JPanel implements MouseListener {
     public void setText(String message) {
         label.setText(message);
     }
-    
+
     /**
      * Adds the specified ActionListener to receive when the user clicks on a square.
      * If listener listener is null, no action is performed.
-     * 
+     *
      * @param listener the listener to be added to the view.
      */
     public void setActionListener(ActionListener listener) {
         this.listener = listener;
     }
-    
+
     /**
      * Sends an ActionEvent to the specified ActionListener when the user clicks on a square.
-     * 
+     *
      * @param e the MouseEvent containing the location of the click.
      */
-    public void mouseClicked(MouseEvent e) {
+    public void mouseReleased(MouseEvent e) {
         if (35 <= e.getX() && e.getX() < 435 && 35 <= e.getY() && e.getY() < 435) {
             int x = (int) Math.ceil(((e.getX() - 35) * 2) / 100);
             int y = (int) Math.ceil(((e.getY() - 35) * 2) / 100);
@@ -262,33 +262,33 @@ public class BoardView extends JPanel implements MouseListener {
             }
         }
     }
-    
+
     /**
      * Unused method from the MouseListener interface.
      *
      * @param e the MouseEvent sent when the mouse button is released.
      */
-    public void mouseReleased(MouseEvent e) {}
-    
+    public void mouseClicked(MouseEvent e) {}
+
     /**
      * Unused method from the MouseListener interface.
      *
      * @param e the MouseEvent sent when the mouse button is pressed.
      */
     public void mousePressed(MouseEvent e) {}
-    
+
     /**
      * Unused method from the MouseListener interface.
      *
      * @param e the MouseEvent sent when the mouse cursor enters the view.
      */
     public void mouseEntered(MouseEvent e) {}
-    
+
     /**
      * Unused method from the MouseListener interface.
      *
      * @param e the MouseEvent sent when the mouse cursor leaves the view.
      */
     public void mouseExited(MouseEvent e) {}
-    
+
 }
